@@ -54,7 +54,8 @@ public class PlayerMovement : MonoBehaviour
         float mouseY = Input.GetAxis("Mouse X") * mouseSensitivity.x;
     
         camHolder.Rotate(mouseX, 0f, 0f);
-        rb.transform.Rotate(0f, mouseY, 0f, 0f);
+        // rb.transform.Rotate(0f, mouseY, 0f, 0f);
+        transform.RotateAround(transform.position, transform.up, mouseY);
     }
 
     // Correct camera position when back is towards an object (Wall etc.)
@@ -75,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
         if(rb.velocity.y < 0){
             jForce = jumpForce-rb.velocity.y;
         }
-        rb.AddForce(Vector3.up*jForce, ForceMode.Impulse);
+        rb.AddForce(transform.up*jForce, ForceMode.Impulse);
     }
     bool checkGround(){
         int groundLayer = LayerMask.GetMask("Ground");
