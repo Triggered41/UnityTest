@@ -9,8 +9,10 @@ public class GravityControl : MonoBehaviour
     public Transform headPos;
     private Vector3[] gravityDir = {Vector3.up, -Vector3.up, -Vector3.right, Vector3.right, Vector3.forward, -Vector3.forward};
     float[] sim = new float[6];
+    Vector3 newGravity;
     void Update()
     {
+        // viz.transform.position = transform.position;
         // Update the gravity in the direction determined by Arrow Keys
         if(Input.GetKeyDown(KeyCode.LeftArrow)){
             UpdateGravity(-transform.right);
@@ -24,11 +26,20 @@ public class GravityControl : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.DownArrow)){
             UpdateGravity(-transform.forward);
         }
+
+        if(Input.GetKeyDown(KeyCode.Return)){
+            ApplyNewGravity();
+            print("OK OK OK");
+        }
   
     }
 
     // Update the gravity in the given direction
     void UpdateGravity(Vector3 dir){
+
+        // Reset the Holograms position and rotation
+        viz.transform.position = transform.position;
+        viz.transform.rotation = transform.rotation;
 
         // Identify the direction in world the player is currently facing
         for (int i = 0; i < 6;   i++)
@@ -37,14 +48,28 @@ public class GravityControl : MonoBehaviour
         }
 
         // Find the new Gravity
-        Vector3 newGravity = gravityDir[indexOfMax(sim)];
+        newGravity = gravityDir[indexOfMax(sim)];
 
-        // Rotate the player so that the feet are towared the ground 
-        transform.rotation = Quaternion.LookRotation(newGravity, transform.up);
-        transform.RotateAround(headPos.position, -transform.right, 90f);
-        
+        // Rotate the Hologram so that the feet are towared the ground 
+        viz.transform.rotation = Quaternion.LookRotation(newGravity, viz.transform.up);
+        viz.transform.RotateAround(headPos.position, -viz.transform.right, 90f);
+
+        // Activate the Hologram
+        viz.gameObject.SetActive(true);
+
+    }
+
+    void ApplyNewGravity(){
+
         // Apply the New Gravity
         Physics.gravity = newGravity*9.8f;
+
+        // Apply Rotation
+        transform.rotation = Quaternion.LookRotation(newGravity, transform.up);
+        transform.RotateAround(headPos.position, -transform.right, 90f);
+
+        // Deactivate the Hologram
+        viz.gameObject.SetActive(false);
     }
 
     // Find the Index of max element

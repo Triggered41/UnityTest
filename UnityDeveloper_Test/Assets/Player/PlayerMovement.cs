@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform camHolder;
     public Transform originalCamPos;
     public Transform groundLoc;
+    public Transform viz;
     public Animator anim;
 
     void Start()
@@ -56,6 +57,9 @@ public class PlayerMovement : MonoBehaviour
         camHolder.Rotate(mouseX, 0f, 0f);
         // rb.transform.Rotate(0f, mouseY, 0f, 0f);
         transform.RotateAround(transform.position, transform.up, mouseY);
+
+        // Rotate the Hologram to always point to the last direction
+        viz.RotateAround(transform.position, transform.up, -mouseY);
     }
 
     // Correct camera position when back is towards an object (Wall etc.)
