@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -85,6 +86,11 @@ public class PlayerMovement : MonoBehaviour
     bool checkGround(){
         int groundLayer = LayerMask.GetMask("Ground");
         return Physics.CheckSphere(groundLoc.position, 0.5f, groundLayer);
+    }
+
+    void OnTriggerEnter(Collider other){
+        print("GameOver");
+        SceneManager.LoadScene("GameOver");
     }
 
 }
