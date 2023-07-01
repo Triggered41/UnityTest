@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundLoc;
     public Transform viz;
     public Animator anim;
+    public PointsManager pointsManager;
 
     void Start()
     {
@@ -89,8 +90,11 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other){
-        print("GameOver");
-        SceneManager.LoadScene("GameOver");
+        if (other.tag == "Points"){
+            pointsManager.ConsumePoint(other.gameObject);
+        }else{
+            SceneManager.LoadScene("GameOver");
+        }
     }
 
 }
