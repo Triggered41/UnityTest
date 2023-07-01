@@ -53,10 +53,11 @@ public class PlayerMovement : MonoBehaviour
 
     // Controlling the camera with mouse
     void CameraLook(){
-        float mouseX = -Input.GetAxis("Mouse Y") * mouseSensitivity.y;
-        float mouseY = Input.GetAxis("Mouse X") * mouseSensitivity.x;
-    
+        float mouseX = -Input.GetAxis("Mouse Y") * mouseSensitivity.y * Time.fixedDeltaTime;
+        float mouseY = Input.GetAxis("Mouse X") * mouseSensitivity.x * Time.fixedDeltaTime;
+        
         camHolder.Rotate(mouseX, 0f, 0f);
+
         // rb.transform.Rotate(0f, mouseY, 0f, 0f);
         transform.RotateAround(transform.position, transform.up, mouseY);
 
@@ -69,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 dir = originalCamPos.transform.position-camHolder.position;
         RaycastHit hitObj;
         bool hit = Physics.Raycast(camHolder.position, dir.normalized, out hitObj, dir.magnitude*1.25f);
+
         if (hit){
             cam.transform.position = hitObj.point-dir.normalized*0.25f;
         }else{
@@ -79,9 +81,11 @@ public class PlayerMovement : MonoBehaviour
     // Player Jump
     void Jump(){
         float jForce = jumpForce;
+        
         if(rb.velocity.y < 0){
             jForce = jumpForce-rb.velocity.y;
         }
+
         rb.AddForce(transform.up*jForce, ForceMode.Impulse);
     }
     bool checkGround(){
